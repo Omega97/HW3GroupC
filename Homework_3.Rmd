@@ -50,7 +50,7 @@ The data set ```Crabs2``` at the book’s website comes from a study of factors 
 
 ### Ex 6.30
 
-When the values of $y$ are multiplied by a constant $c$, from their formulas, show that $s_y$ and $\hat β_1$ in the bivariate linear model are also then multiplied by c. Thus, show that $r = \hat β_1(s_x/s_y)$ does not depend on the units of measurement.
+When the values of $y$ are multiplied by a constant $c$, from their formulas, show that $s_y$ and $\hat\beta_1$ in the bivariate linear model are also then multiplied by c. Thus, show that $r = \hat \beta_1(s_x/s_y)$ does not depend on the units of measurement.
 
 **Solution**
 
@@ -97,14 +97,14 @@ F = \frac{(T SS − SSE)/p}{SSE/[n − (p + 1)]}
 $$
 is equivalently 
 $$
-\frac{R^2/p}{(1 − R2)/[n − (p + 1)]}
+\frac{R^2/p}{(1 − R^2)/[n − (p + 1)]}
 $$
 Explain why larger values of $R^2$ yield larger values of $F$.
 
 (b)
 Show that for comparing nested linear models,
 $$
-F = \frac{(SSE0 − SSE1)/(p1 − p0)}{SSE1/[n − (p_1 + 1)]}
+F = \frac{(SSE_0 − SSE_1)/(p1 − p0)}{SSE_1/[n − (p_1 + 1)]}
 =\frac{(R_1^2 − R_0^2)/(p_1 − p_0)}{(1 − R_1^2)/[n − (p_1 + 1)]}
 $$
 
@@ -195,14 +195,14 @@ A headline in $The Gainesville Sun$ (Feb. 17, 2014) proclaimed a worrisome spike
 
 ### Ex 6
 
-As in the previous exercise, the function ```poissonsim()``` allows for experimentation with Poisson regression. In particular, ```poissonsim()``` can be used to simulate Poisson responses with log-rates equal to $a + bx$, where $a$ and $b$ are fixed values by default.
+As in the previous exercise, the function ```poissonsim()``` allows for experimentation with Poisson regression. In particular, ```poissonsim()``` can be used to simulate Poisson responses with log-rates equal to $a + b \space x$, where $a$ and $b$ are fixed values by default.
 
 (a) Simulate 100 Poisson responses using the model
-$$log λ = 2 − 4x$$
+$$log \space \lambda = 2 − 4x$$
 for x = 0, 0.01, 0.02 ..., 1.0. Fit a Poisson regression model to these data, and compare the estimated coefficients with the true coefficients. How well does the estimated model predict future observations?
 
 (b) Simulate 100 Poisson responses using the model
-$$log λ = 2 − bx$$
+$$log \space \lambda = 2 − b \space x$$
 where b is normally distributed with mean 4 and standard deviation 5. [Use the argument ```slope.sd=5``` in the ```poissonsim()``` function.] How do the results using the poisson and ```quasipoisson``` families differ?
 
 **Solution**
