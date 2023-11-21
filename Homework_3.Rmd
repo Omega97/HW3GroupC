@@ -1,0 +1,217 @@
+---
+title: "Homework_3"
+author: "Donninelli, Cusma Fait, Behrouz, El gataa"
+date: "2023-12-03"
+output: html_document
+---
+
+```{r, echo=FALSE}
+set.seed(0)
+```
+
+
+
+## FSDS - Chapter 6
+
+
+
+### Ex 6.12
+
+For the ```UN``` data file at the book’s website (see Exercise 1.24), construct a multiple regression model predicting Internet using all the other variables. Use the concept of multicollinearity to explain why adjusted $R^2$ is not dramatically greater than when GDP is the sole predictor. Compare the estimated GDP effect in the bivariate model and the multiple regression model and explain why it is so much weaker in the multiple regression model.
+
+**Solution**
+
+...
+
+```{r 6_12}
+
+```
+
+...
+
+
+
+### Ex 6.14
+
+The data set ```Crabs2``` at the book’s website comes from a study of factors that affect sperm traits of male horseshoe crabs. A response variable, $SpermTotal$, is the log of the total number of sperm in an ejaculate. It has $\bar y = 19.3$ and $s = 2.0$x. The two explanatory variables used in the ```R``` output are the horseshoe crab’s $carapace width$ (CW, mean 18.6 cm, standard deviation 3.0 cm), which is a measure of its size, and $color$ (1 = dark, 2 = medium, 3 = light), which is a measure of adult age, darker ones being older.
+
+
+**Solution**
+
+...
+
+```{r 6_14}
+
+```
+
+...
+
+
+
+### Ex 6.30
+
+When the values of $y$ are multiplied by a constant $c$, from their formulas, show that $s_y$ and $\hat β_1$ in the bivariate linear model are also then multiplied by c. Thus, show that $r = \hat β_1(s_x/s_y)$ does not depend on the units of measurement.
+
+**Solution**
+
+...
+
+```{r 6_30}
+
+```
+
+...
+
+
+
+### Ex 6.42
+
+You can fit the quadratic equation $E(Y) = \beta_0+\beta_1 x+\beta_2 x^2$ by fitting a multiple regression model with $x_1 = x$ and $x_2 = x^2$.
+
+(a)
+Simulate 100 independent observations from the model $Y = 40.0−5.0x+0.5x^2+\epsilon$, where $X$ has a uniform distribution over $[0, 10]$ and $\epsilon ∼ N(0, 1)$. Plot the data and fit the quadratic model. Report how the fitted equation compares with the true relationship.
+
+(b) 
+Find the correlation between $x$ and $y$ and explain why it is so weak even though the plot shows a strong relationship with a large $R^2$ value for the quadratic model.
+
+**Solution**
+
+...
+
+```{r 6_42}
+
+```
+
+...
+
+
+
+### Ex 6.52
+
+$F$ statistics have alternate expressions in terms of $R^2$ values.
+
+(a)
+Show that for testing $H_0: \beta_1 = ⋯ = \beta_p = 0$,
+$$
+F = \frac{(T SS − SSE)/p}{SSE/[n − (p + 1)]}
+$$
+is equivalently 
+$$
+\frac{R^2/p}{(1 − R2)/[n − (p + 1)]}
+$$
+Explain why larger values of $R^2$ yield larger values of $F$.
+
+(b)
+Show that for comparing nested linear models,
+$$
+F = \frac{(SSE0 − SSE1)/(p1 − p0)}{SSE1/[n − (p_1 + 1)]}
+=\frac{(R_1^2 − R_0^2)/(p_1 − p_0)}{(1 − R_1^2)/[n − (p_1 + 1)]}
+$$
+
+**Solution**
+
+...
+
+```{r 6_52}
+
+```
+
+...
+
+
+
+## FSDS - Chapter 7
+
+
+
+### Ex 7.4
+
+Refer to the simulation in Section 7.1.6. Randomly sample 6 observations from the same uniform/normal structure. Fit the null model, the straight-line model, and the fifth-degree polynomial. For each model fit, find SSE and find the sum of squared errors around the true means.
+Explain what this shows.
+
+**Solution**
+
+...
+
+```{r 7_4}
+
+```
+
+...
+
+
+
+### Ex 7.20
+
+In the ```Crabs``` data file introduced in Section 7.4.2, the variable y indicates whether a female horseshoe crab has at least one satellite (1 = yes, 0 = no).
+
+(a) 
+Fit a main-effects logistic model using weight and categorical color as explanatory variables. Conduct a significance test for the color effect, and construct a $95\%$ confidence interval for the weight effect.
+
+(b) 
+Fit the model that permits interaction between color as a factor and weight in their effects, showing the estimated effect of weight for each color. Test whether this model provides a significantly better fit.
+
+(c) 
+Use AIC to determine which models seem most sensible among the models with 
+(i) interaction, 
+(ii) main effects, 
+(iii) weight as the sole predictor, 
+(iv) color as the sole predictor, and 
+(v) the null model.
+
+
+**Solution**
+
+...
+
+```{r 7_20}
+
+```
+
+...
+
+
+
+### Ex 7.26
+
+A headline in $The Gainesville Sun$ (Feb. 17, 2014) proclaimed a worrisome spike in shark attacks in the previous two years. The reported total number of shark attacks in Florida per year from 2001 to 2013 were 33, 29, 29, 12, 17, 21, 31, 28, 19, 14, 11, 26, 23. Are these counts consistent with a null Poisson model? Explain, and compare aspects of the Poisson model and negative binomial model fits.
+
+
+**Solution**
+
+...
+
+```{r 7_26}
+
+```
+
+...
+
+
+
+## DAAG - Chapter 8
+
+
+
+### Ex 6
+
+As in the previous exercise, the function ```poissonsim()``` allows for experimentation with Poisson regression. In particular, ```poissonsim()``` can be used to simulate Poisson responses with log-rates equal to $a + bx$, where $a$ and $b$ are fixed values by default.
+
+(a) Simulate 100 Poisson responses using the model
+$$log λ = 2 − 4x$$
+for x = 0, 0.01, 0.02 ..., 1.0. Fit a Poisson regression model to these data, and compare the estimated coefficients with the true coefficients. How well does the estimated model predict future observations?
+
+(b) Simulate 100 Poisson responses using the model
+$$log λ = 2 − bx$$
+where b is normally distributed with mean 4 and standard deviation 5. [Use the argument ```slope.sd=5``` in the ```poissonsim()``` function.] How do the results using the poisson and ```quasipoisson``` families differ?
+
+**Solution**
+
+...
+
+```{r 6}
+
+```
+
+...
+
