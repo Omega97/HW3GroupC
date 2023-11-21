@@ -126,8 +126,7 @@ $$
 
 ### Ex 7.4
 
-Refer to the simulation in Section 7.1.6. Randomly sample 6 observations from the same uniform/normal structure. Fit the null model, the straight-line model, and the fifth-degree polynomial. For each model fit, find SSE and find the sum of squared errors around the true means.
-Explain what this shows.
+Analogously to the previous exercise, randomly sample 30 $X$ observations from a uniform in the interval $(-4,4)$ and conditional on $X = x$, 30 normal observations with $E(Y) = 3.5x^3 − 20x^2 + 0.5x + 20$ and $\sigma = 30$. Fit polynomial normal GLMs of lower and higher order than that of the true relationship. Which model would you suggest? Repeat the same task for $E(Y) = 0.5 x^3 − 20x^2 + 0.5x + 20$ (same $\sigma$) several times. What do you observe? Which model would you suggest now?
 
 **Solution**
 
