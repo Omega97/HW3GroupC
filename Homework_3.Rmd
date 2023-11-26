@@ -21,13 +21,29 @@ For the ```UN``` data file at the book’s website (see Exercise 1.24), construc
 
 **Solution**
 
-...
 
 ```{r 6_12}
+UN.data <- read.table("https://stat4ds.rwth-aachen.de/data/UN.dat", header=TRUE)
 
+# We construct a multiple linear regression as requested, using all variables to predict "internet"
+m_full <- with(UN.data, lm(Internet ~ . - Nation, data=UN.data))  # Concise way to say "all but Nation"
+summary(m_full)
+
+# We now build the reduced model which only uses GDP as predictor
+m_gdp <- with(UN.data, lm(Internet ~ GDP, data=UN.data))
+summary(m_gdp)
 ```
+As evident from the comparison, the full model yields an adjusted $R^2$ value of $0.8164$, while the GDP-only model shows a value of $0.7637$.
+Notably, examining the p-value associated with the GDP predictor's t-test reveals a significantly stronger impact in the GDP-only model than indicated in the full model.
 
-...
+These disparities often arise due to multicollinearity among predictors, multicollinearity is a common problem for regression modelling and occurs when some of our predictors are linearly interrelated. Multicollinearity can deflate the adjusted $R^2$ value, as the penalty for adding predictors outweighs the information gain. In case of multicollinearity a single predictor can also have a significance value which does not reflect its true importance. This occurs because the predictor nearly replicates a linear combination of others, impacting its perceived importance in the model.
+
+We can use the variance inflation factor (VIF) to assess multicollinearity impact. VIF measures the effect of correlation with other variables in increasing the standard error of a regression coefficient. As a rule of thumb, we can detect an high multicollinearity if $VIF(\beta_j) > 10$.
+```{r 6_12bis}
+library(car)
+vif(m_full)
+```
+As we can see there's an high chance that multicollinearity is the cause of the behaviour we observed.
 
 
 
@@ -110,14 +126,31 @@ $$
 
 **Solution**
 
-...
+First of all let's recall the definition of $R^2$ and a simple decomposition which is always valid if the intercept is included in the model:
+$$
+R^2 = \frac{SSR}{SST} = 1 - \frac{SSE}{TSS}
+$$
+It follows immediately that
+$$
+1 - R^2 = \frac{SSE}{TSS}
+$$
 
-```{r 6_52}
+(a) To derive the result we simply need to divide by $TSS$ both numerator and denominator and apply the previous observation.
+$$
+\frac{(TSS − SSE)/p}{SSE/[n − (p + 1)]} = \frac{\frac{TSS − SSE}{TSS}}{\frac{SSE}{TSS}} \frac{1/p}{1/[n-(p+1)]} = \frac{1 - \frac{SSE}{TSS}}{1 - R^2 }\frac{1/p}{1/[n-(p+1)]} = \frac{R^2/p}{(1 − R^2)/[n − (p + 1)]}
+$$
+From this equivalence we can observe that when $R^2$ increases the numerator increases and the denominator decreases, leading to a general increase of $F$.
+This makes perfect sense, an increase in $R^2$ generally means that the model constructed is better and $F$ statistic is used to assess whether the used model is better than the null one, therefore it is sensible that when the model get's better the $F$ statistic increases and *the chances of rejecting* the null hypothesis $H_0: \mu_i = \beta_0$ increase.
 
-```
-
-...
-
+(b) Assuming to have two nested models we start by observing that the $TSS$ quantity does not depend on the model chosen but only on the data. To obtain the requested result we simply need to divide by $TSS$ both numerator and denominator and apply the observation obtained for (a).
+$$
+\begin{split}
+\frac{(SSE_0 − SSE_1)/(p1 − p0)}{SSE_1/[n − (p_1 + 1)]} &= \frac{\frac{SSE_0 − SSE_1}{TSS}}{\frac{SSE_1}{TSS}} \frac{1/(p1 − p0)}{1/[n − (p_1 + 1)]} =\\
+& = \frac{\frac{SSE_0}{TSS} − \frac{SSE_1}{TSS}}{1 - R_1^2} \frac{1/(p1 − p0)}{1/[n − (p_1 + 1)]} =\\
+& = \frac{(1 - R_0^2) - (1 - R_1^2)}{1 - R_1^2} \frac{1/(p1 − p0)}{1/[n − (p_1 + 1)]} =\\
+&= \frac{(R_1^2 − R_0^2)/(p_1 − p_0)}{(1 − R_1^2)/[n − (p_1 + 1)]}
+\end{split}
+$$
 
 
 ## FSDS - Chapter 7
