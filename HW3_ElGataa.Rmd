@@ -1,0 +1,120 @@
+---
+title: "HW3_elgataa"
+output: html_document
+date: "2023-12-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#The data set30 Crabs2 at the book’s website comes from a study of factors that affect sperm traits of male horseshoe crabs. A response variable, SpermTotal, is the log of the total number of sperm in an ejaculate. It has y = 19.3 and s = 2.0. The two explanatory variables used in the R output are the horseshoe crab’s carapace width (CW, mean 18.6 cm, standard deviation 3.0 cm), which is a measure of its size, and color (1 = dark, 2 = medium, 3 = light), which is a measure of adult age, darker ones being older.
+
+
+```{r cars}
+(a) Prediction Equation and Parameter Interpretation:
+
+The regression model can be expressed as:
+
+SpermTotal=11.366+0.391×CW+0.809×factor(Color)2+1.149×factor(Color)3
+
+    Intercept (11.366): Represents the baseline log of total sperm count when both carapace width (CW) and color are zero (or for the reference color).
+
+    CW (0.391): Implies that with each unit increase in carapace width, we anticipate a 0.391 unit increase in the log of total sperm count, holding color constant.
+
+    factor(Color)2 (0.809): Indicates the expected difference in log sperm count between color category 2 and the reference category (likely color 1).
+
+    factor(Color)3 (1.149): Represents the expected difference in log sperm count between color category 3 and the reference category.
+
+(b) Explanation of F Statistics:
+
+(i) For the Overall Model:
+
+    F value: 55.06
+    p-value: < 2.2e-16
+    
+    The combined impact of CW, factor(Color), and their interaction significantly influences the log of total sperm count. At least one of these predictors contributes significantly to the model, we can further study the relations and see which one contributes.
+
+(ii) For the factor(Color) Effect:
+
+    F value: 9.5757
+    p-value: 9.812e-05
+    
+    There are noteworthy differences in log sperm count among various color categories. 
+    The Color effect is statistically significant.
+
+(iii) For the Interaction Term (CW:factor(Color)):
+
+    F value: 1.5198
+    p-value: 0.2207
+    
+    The interaction effect between carapace width (CW) and color is not statistically significant. This implies that the joint impact of CW and color on log sperm count does not deviate significantly from their individual effects.
+```
+
+
+Ex6 Chap 8
+#As in the previous exercise, the function poissonsim() allows for experimentation with Poisson regression. In particular, poissonsim() can be used to simulate Poisson responses with log-rates equal to a + bx, where a and b are fixed values by default.
+#(a) Simulate 100 Poisson responses using the model
+log λ = 2 − 4x
+for x = 0, 0.01, 0.02 . . . , 1.0. Fit a Poisson regression model to these data, and compare the estimated coefficients with the true coefficients. How well does the estimated model predict future observations?
+#(b) Simulate 100 Poisson responses using the model
+log λ = 2 − bx
+where b is normally distributed with mean 4 and standard deviation 5. [Use the argument slope.sd=5 in the poissonsim() function.] How do the results using the poisson and quasipoisson families differ?
+
+
+```{r pressure, echo=FALSE}
+# Install and load necessary libraries
+# install.packages("MASS")
+library(MASS)
+
+# Function to simulate Poisson responses
+poissonsim <- function(n, x, intercept, slope, slope.sd = 0) {
+  if (slope.sd == 0) {
+    # Case (a): Fixed slope
+    log_lambda <- intercept + slope * x
+  } else {
+    # Case (b): Random slope with normal distribution
+    slope_values <- rnorm(length(x), mean = slope, sd = slope.sd)
+    log_lambda <- intercept + slope_values * x
+  }
+  
+  y <- rpois(n, exp(log_lambda))
+  
+  return(data.frame(x = x, y = y))
+}
+
+# (a) Simulate 100 Poisson responses using the model log λ = 2 − 4x
+set.seed(123)
+x_values_a <- seq(0, 1, by = 0.01)
+sim_data_a <- poissonsim(101, x_values_a, intercept = 2, slope = -4)
+
+# Fit Poisson regression model
+model_a <- glm(y ~ x, family = poisson(), data = sim_data_a)
+
+# Display estimated coefficients
+cat("True coefficients: Intercept = 2, Slope = -4\n")
+cat("Estimated coefficients:", coef(model_a), "\n")
+
+# (b) Simulate 100 Poisson responses using the model log λ = 2 − bx, where b ~ N(4, 5)
+set.seed(456)
+x_values_b <- seq(0, 1, by = 0.01)  # Ensure the same length as simulated data
+sim_data_b <- poissonsim(101, x_values_b, intercept = 2, slope = 0, slope.sd = 5)
+
+# Fit Poisson regression model
+model_b_poisson <- glm(y ~ x, family = poisson(), data = sim_data_b)
+
+# Fit Quasi-Poisson regression model
+model_b_quasipoisson <- glm(y ~ x, family = quasipoisson(), data = sim_data_b)
+
+# Display estimated coefficients for Poisson and Quasi-Poisson models
+cat("Poisson Model - Estimated coefficients:", coef(model_b_poisson), "\n")
+cat("Quasi-Poisson Model - Estimated coefficients:", coef(model_b_quasipoisson), "\n")
+
+
+```
+
+Commentary:
+
+    For (a), we simulate data using a fixed slope. After simulating, we fit a Poisson regression model (glm with family poisson) and compare the estimated coefficients with the true coefficients.
+
+    For (b), we simulate data using a normally distributed slope. We fit both a Poisson regression model and a Quasi-Poisson regression model (quasipoisson family) to compare the results. The Quasi-Poisson model is useful when there's overdispersion in the data, and it allows for the estimation of dispersion parameters.
