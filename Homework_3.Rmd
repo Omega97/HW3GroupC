@@ -322,7 +322,7 @@ where b is normally distributed with mean 4 and standard deviation 5. [Use the a
 
 **Solution**
 
-```{r pressure, echo=TRUE}
+```{r}
 # Install and load necessary libraries
 # install.packages("MASS")
 library(MASS)
@@ -351,13 +351,21 @@ sim_data_a <- poissonsim(101, x_values_a, intercept = 2, slope = -4)
 # Fit Poisson regression model
 model_a <- glm(y ~ x, family = poisson(), data = sim_data_a)
 
-# Display estimated coefficients
+# Display true and estimated coefficients
 cat("True coefficients: Intercept = 2, Slope = -4\n")
 cat("Estimated coefficients:", coef(model_a), "\n")
 
+# Predict future observations
+new_data_a <- data.frame(x = seq(0, 1, by = 0.01))
+predicted_values_a <- predict(model_a, newdata = new_data_a, type = "response")
+
+# Visualize predictions
+plot(sim_data_a$x, sim_data_a$y, col = "blue", pch = 16, main = "Observed vs. Predicted Values (Case a)", xlab = "x", ylab = "y")
+lines(new_data_a$x, predicted_values_a, col = "red", lwd = 2)
+
 # (b) Simulate 100 Poisson responses using the model log λ = 2 − bx, where b ~ N(4, 5)
 set.seed(456)
-x_values_b <- seq(0, 1, by = 0.01)  # Ensure the same length as simulated data
+x_values_b <- seq(0, 1, by = 0.01)
 sim_data_b <- poissonsim(101, x_values_b, intercept = 2, slope = 0, slope.sd = 5)
 
 # Fit Poisson regression model
@@ -367,8 +375,8 @@ model_b_poisson <- glm(y ~ x, family = poisson(), data = sim_data_b)
 model_b_quasipoisson <- glm(y ~ x, family = quasipoisson(), data = sim_data_b)
 
 # Display estimated coefficients for Poisson and Quasi-Poisson models
-cat("Poisson Model - Estimated coefficients:", coef(model_b_poisson), "\n")
-cat("Quasi-Poisson Model - Estimated coefficients:", coef(model_b_quasipoisson), "\n")
+cat("Poisson Model (Case b) - Estimated coefficients:", coef(model_b_poisson), "\n")
+cat("Quasi-Poisson Model (Case b) - Estimated coefficients:", coef(model_b_quasipoisson), "\n")
 
 
 ```
