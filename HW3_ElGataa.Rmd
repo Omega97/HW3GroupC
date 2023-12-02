@@ -93,9 +93,18 @@ sim_data_a <- poissonsim(101, x_values_a, intercept = 2, slope = -4)
 # Fit Poisson regression model
 model_a <- glm(y ~ x, family = poisson(), data = sim_data_a)
 
-# Display estimated coefficients
+# Display true estimated coefficients
 cat("True coefficients: Intercept = 2, Slope = -4\n")
 cat("Estimated coefficients:", coef(model_a), "\n")
+
+# Predict future observations
+new_data_a <- data.frame(x = seq(0, 1, by = 0.01))
+predicted_values_a <- predict(model_a, newdata = new_data_a, type = "response")
+
+# Visualize predictions
+plot(sim_data_a$x, sim_data_a$y, col = "blue", pch = 16, main = "Observed vs. Predicted Values (Case a)", xlab = "x", ylab = "y")
+lines(new_data_a$x, predicted_values_a, col = "red", lwd = 2)
+
 
 # (b) Simulate 100 Poisson responses using the model log λ = 2 − bx, where b ~ N(4, 5)
 set.seed(456)
