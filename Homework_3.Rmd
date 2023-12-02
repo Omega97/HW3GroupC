@@ -20,7 +20,7 @@ For the ```UN``` data file at the book’s website (see Exercise 1.24), construc
 **Solution**
 
 
-```{r 6_12}
+```{r 6_12, echo=TRUE}
 UN.data <- read.table("https://stat4ds.rwth-aachen.de/data/UN.dat", header=TRUE)
 
 # We construct a multiple linear regression as requested, using all variables to predict "internet"
@@ -37,7 +37,7 @@ Notably, examining the p-value associated with the GDP predictor's t-test reveal
 These disparities often arise due to multicollinearity among predictors, multicollinearity is a common problem for regression modelling and occurs when some of our predictors are linearly interrelated. Multicollinearity can deflate the adjusted $R^2$ value, as the penalty for adding predictors outweighs the information gain. In case of multicollinearity a single predictor can also have a significance value which does not reflect its true importance. This occurs because the predictor nearly replicates a linear combination of others, impacting its perceived importance in the model.
 
 We can use the variance inflation factor (VIF) to assess multicollinearity impact. VIF measures the effect of correlation with other variables in increasing the standard error of a regression coefficient. As a rule of thumb, we can detect an high multicollinearity if $VIF(\beta_j) > 10$.
-```{r 6_12bis}
+```{r 6_12bis, echo=TRUE}
 library(car)
 vif(m_full)
 ```
@@ -163,7 +163,7 @@ Find the correlation between $x$ and $y$ and explain why it is so weak even thou
 **Solution**
 
 a)
-```{r}
+```{r 6.42, echo=TRUE}
  set.seed(123)
   n <- 100
   x <- runif(n, 0, 10)
