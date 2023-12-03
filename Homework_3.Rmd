@@ -238,8 +238,8 @@ $$
 $$
 
 
-## FSDS - Chapter 7
 
+## FSDS - Chapter 7
 
 
 ### Ex 7.4
@@ -248,13 +248,149 @@ Analogously to the previous exercise, randomly sample 30 $X$ observations from a
 
 **Solution**
 
-...
 
-```{r 7_4}
+
+```{r 7_4_a}
+set.seed(0)
+
+## randomly sampling 30 X observations from a uniform in the interval (−4,4)
+n <- 30
+x <- runif(n, min=-4, max=4)
+
+## ...and conditional on X=x, 30 normal observations with the given E(Y) and  σ
+true_f <- function(x) {
+  3.5 * x^3 - 20 * x^2 + 0.5 * x + 20
+}
+
+noisy_f <- function(x) {
+  true_f(x) + rnorm(1, 0, 30) 
+}
+
+# Plotting data and fitting with the true mean value for each x
+y <- unlist(lapply(x, noisy_f))
+x.thick <- seq(-5, 5, by=.01)
+y.fit <- lapply(x.thick, true_f)
+plot(x, y, main='Sample A', xlim=c(-4.5,4.5), ylim=c(-600, 150))
+lines(x.thick, y.fit, col='red', lty = 'solid')
+legend(x = "topleft", legend = c('E(Y)'), 
+       lty = c(1), col = c('red'), 
+       lwd = 2, bg='transparent', box.col='transparent', cex=0.8)
+```
+
+
+
+```{r 7_4_b}
+
+## Fitting polynomial normal GLMs of order 2 and 4 
+x_2 <- x^2
+x_3 <- x^3
+x_4 <- x^4
+
+data_4 <- data.frame(x, x_2, x_3, x_4, y)
+data_2 <- data.frame(x, x_2, y)
+
+fit_4 <- glm(y ~ x + x_2 + x_3 + x_4, 
+             family=gaussian, 
+             data=data_4)
+
+fit_2 <- glm(y ~ x + x_2, 
+             family=gaussian, 
+             data=data_2)
+
+c0 <- coef(fit_4)[1]
+c1 <- coef(fit_4)[2]
+c2 <- coef(fit_4)[3]
+c3 <- coef(fit_4)[4]
+c4 <- coef(fit_4)[5]
+y_fit_4 <- c0 + c1 * x.thick + c2 * x.thick^2 + c3 * x.thick^3 + c4 * x.thick^4
+
+c0 <- coef(fit_2)[1]
+c1 <- coef(fit_2)[2]
+c2 <- coef(fit_2)[3]
+y_fit_2 <- c0 + c1 * x.thick + c2 * x.thick^2
+
+## Plotting the result of the fits for sample A
+plot(x, y, main='Fits for sample A', xlim=c(-4.5,4.5), ylim=c(-650, 200))
+lines(x.thick, y.fit, col='red', lty = 'solid')
+lines(x.thick, y_fit_4, col='orange', lty = 'dashed')
+lines(x.thick, y_fit_2, col='blue', lty = 'dashed')
+
+legend(x = "topleft", legend = c('E(Y)', 'order 4', 'order 2'), 
+       lty = c(1, 2, 2), col = c('red', 'orange', 'blue'), 
+       lwd = 2, bg='transparent', box.col='transparent', cex=0.8)        
+
 
 ```
 
-...
+The more complex model captures very well the pattern that the sample exhibits, as can be seen by the fact that it closely resembles the true expectation value. The simplest model fails to do so, and this is why, in this case, we should in principle prefer the more complex model, but further testing is recommended.
+
+
+```{r 7_4_c}
+
+## Repeating the same task for E(Y)=0.5x^3−20x^2+0.5x+20 (same σ)
+
+true_f <- function(x) {
+  0.5 * x^3 - 20 * x^2 + 0.5 * x + 20
+}
+
+noisy_f <- function(x) {
+  true_f(x) + rnorm(1, 0, 30) 
+}
+
+# plot data and fit
+y <- unlist(lapply(x, noisy_f))
+x.thick <- seq(-5, 5, by=.01)
+y.fit <- lapply(x.thick, true_f)
+plot(x, y, main='Sample B', xlim=c(-4.5,4.5), ylim=c(-600, 150))
+lines(x.thick, y.fit, col='red', lty = 'solid')
+legend(x = "topleft", legend = c('E(Y)'), 
+       lty = c(1), col = c('red'), 
+       lwd = 2, bg='transparent', box.col='transparent', cex=0.8)
+```
+
+
+
+```{r 7_4_d}
+
+# fit
+data_4 <- data.frame(x, x_2, x_3, x_4, y)
+data_2 <- data.frame(x, x_2, y)
+
+fit_4 <- glm(y ~ x + x_2 + x_3 + x_4, 
+             family=gaussian, 
+             data=data_4)
+
+fit_2 <- glm(y ~ x + x_2, 
+             family=gaussian, 
+             data=data_2)
+
+
+# plot
+c0 <- coef(fit_4)[1]
+c1 <- coef(fit_4)[2]
+c2 <- coef(fit_4)[3]
+c3 <- coef(fit_4)[4]
+c4 <- coef(fit_4)[5]
+y_fit_4 <- c0 + c1 * x.thick + c2 * x.thick^2 + c3 * x.thick^3 + c4 * x.thick^4
+
+c0 <- coef(fit_2)[1]
+c1 <- coef(fit_2)[2]
+c2 <- coef(fit_2)[3]
+y_fit_2 <- c0 + c1 * x.thick + c2 * x.thick^2
+
+## Plotting the result of the fits for sample B
+plot(x, y, main='Fits for sample B', xlim=c(-4.5,4.5), ylim=c(-650, 200))
+lines(x.thick, y.fit, col='red', lty = 'solid')
+lines(x.thick, y_fit_4, col='orange', lty = 'dashed')
+lines(x.thick, y_fit_2, col='blue', lty = 'dashed')
+
+legend(x = "topleft", legend = c('E(Y)', 'order 4', 'order 2'), 
+       lty = c(1, 2, 2), col = c('red', 'orange', 'blue'), 
+       lwd = 2, bg='transparent', box.col='transparent', cex=0.8)        
+
+```
+
+In this case, the third order coefficient barely has any effect on the results of the fit. Therefore, in this case we prefer the simpler model.
 
 
 
