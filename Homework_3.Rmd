@@ -415,13 +415,67 @@ Use AIC to determine which models seem most sensible among the models with
 
 **Solution**
 
-...
 
-```{r 7_20}
+```{r 7_20_a}
+url <- "http://stat4ds.rwth-aachen.de/data/Crabs.dat"
+crabs <- read.table(url, header=TRUE)
 
+summary(crabs)
 ```
 
-...
+```{r 7_20_b}
+# Fitting a main-effects logistic model using weight and categorical color as explanatory variables
+fit_main <- glm(y ~ weight + factor(color), 
+                family='binomial', 
+                data=crabs)
+
+summary(fit_main)
+```
+
+```{r 7_20_c}
+# 95% confidence interval for the weight effect
+mu <- coef(fit_main)['weight']
+z <- qnorm(0.95)
+serr <- summary(fit_main)$coefficients[2, 2]
+conf_int <- mu + c(-1,1) * serr * z
+
+# Fitting the model that permits interaction between color as a factor and weight in their effects
+fit_inter <- glm(y ~ weight * factor(color), 
+                 family='binomial', 
+                 data=crabs)
+
+summary(fit_inter)
+```
+
+```{r 7_20_d}
+# Testing whether this model provides a significantly better fit with anova
+anova(fit_main, fit_inter)
+```
+
+```{r 7_20_e}
+# Here we use AIC to determine which models seem most sensible among the models with: interaction, main effects, weight as the sole predictor, color as the sole predictor, and the null model
+fit_weight <- glm(y ~ weight, 
+                  family='binomial', 
+                  data=crabs)
+
+fit_color <- glm(y ~ factor(color), 
+                 family='binomial', 
+                 data=crabs)
+
+fit_null <- glm(y ~ 1, 
+                family='binomial', 
+                data=crabs)
+
+result <- AIC(fit_inter, fit_main, fit_weight, fit_color, fit_null)
+result
+```
+
+```{r 7_20_f}
+plot(result$df, result$AIC, main='fits AIC', xlim=c(0.5, 9.5), ylim=c(190, 240))
+text(result$df, result$AIC+6, rownames(result))
+```
+
+Given the semantic that a lower AIC score is better, and a lower number of degrees of freedom is also better, the plot suggests that we should in general choose the model that relies on the weight alone.
 
 
 
