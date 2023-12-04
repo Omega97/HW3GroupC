@@ -6,19 +6,27 @@ output: html_document
 ---
 
 ```{r, echo=FALSE}
+
+# Install and load necessary libraries
+# install.packages("MASS")
+library(MASS)
+
+# set seed for reproducibility
 set.seed(0)
+
 ```
 
 
 
 ## FSDS - Chapter 6
 
+
+
 ### Ex 6.12
 
 For the ```UN``` data file at the book’s website (see Exercise 1.24), construct a multiple regression model predicting Internet using all the other variables. Use the concept of multicollinearity to explain why adjusted $R^2$ is not dramatically greater than when GDP is the sole predictor. Compare the estimated GDP effect in the bivariate model and the multiple regression model and explain why it is so much weaker in the multiple regression model.
 
 **Solution**
-
 
 ```{r 6_12, echo=TRUE}
 UN.data <- read.table("https://stat4ds.rwth-aachen.de/data/UN.dat", header=TRUE)
@@ -95,6 +103,8 @@ The Color effect is statistically significant.
 ```    
 The interaction effect between carapace width (CW) and color is not statistically significant. This implies that the joint impact of CW and color on log sperm count does not deviate significantly from their individual effects.
 
+
+
 ### Ex 6.30
 
 When the values of $y$ are multiplied by a constant $c$, from their formulas, show that $s_y$ and $\hat\beta_1$ in the bivariate linear model are also then multiplied by c. Thus, show that $r = \hat \beta_1(s_x/s_y)$ does not depend on the units of measurement.
@@ -150,6 +160,7 @@ $$
 So $c$ cancels out in the numerator and denominator and as we show, \(r\) does not depend on the units of measurement.
 
 
+
 ### Ex 6.42
 
 You can fit the quadratic equation $E(Y) = \beta_0+\beta_1 x+\beta_2 x^2$ by fitting a multiple regression model with $x_1 = x$ and $x_2 = x^2$.
@@ -162,7 +173,7 @@ Find the correlation between $x$ and $y$ and explain why it is so weak even thou
 
 **Solution**
 
-a)
+(a)
 ```{r 6.42, echo=TRUE}
  set.seed(123)
   n <- 100
@@ -183,8 +194,11 @@ a)
   r_squared <- summary(model)$r.squared
   cat("R-squared value for the quadratic model:", r_squared, "\n") 
 ```
-b)Because the correlation coefficient measures linear relationships, If the relationship is nonlinear, the correlation may not capture its strength effectively. $R^2$value represents the proportion of variance explained by the model. It can be high even for nonlinear relationships, as long as the model fits the data well.
+
+(b)
+Because the correlation coefficient measures linear relationships, If the relationship is nonlinear, the correlation may not capture its strength effectively. $R^2$value represents the proportion of variance explained by the model. It can be high even for nonlinear relationships, as long as the model fits the data well.
 The weak correlation between $x$ and $y$ doesn't necessarily contradict the large $R^2$ value. The quadratic model is capturing the nonlinear relationship effectively, leading to a high $R^2$value while the correlation reflects the linear association, which may be weak because of the nature of the quadratic.
+
 
 
 ### Ex 6.52
@@ -242,13 +256,14 @@ $$
 ## FSDS - Chapter 7
 
 
+
 ### Ex 7.4
 
 Analogously to the previous exercise, randomly sample 30 $X$ observations from a uniform in the interval $(-4,4)$ and conditional on $X = x$, 30 normal observations with $E(Y) = 3.5x^3 − 20x^2 + 0.5x + 20$ and $\sigma = 30$. Fit polynomial normal GLMs of lower and higher order than that of the true relationship. Which model would you suggest? Repeat the same task for $E(Y) = 0.5 x^3 − 20x^2 + 0.5x + 20$ (same $\sigma$) several times. What do you observe? Which model would you suggest now?
 
 **Solution**
 
-
+First, we generate our sample, and plot it alongside with the true expectation value of the random variable.
 
 ```{r 7_4_a}
 set.seed(0)
@@ -275,9 +290,10 @@ lines(x.thick, y.fit, col='red', lty = 'solid')
 legend(x = "topleft", legend = c('E(Y)'), 
        lty = c(1), col = c('red'), 
        lwd = 2, bg='transparent', box.col='transparent', cex=0.8)
+
 ```
 
-
+We fit the data with polynomial normal GLMs of lower and higher order than that of the true relationship, and plot the results.
 
 ```{r 7_4_b}
 
@@ -315,7 +331,7 @@ lines(x.thick, y.fit, col='red', lty = 'solid')
 lines(x.thick, y_fit_4, col='orange', lty = 'dashed')
 lines(x.thick, y_fit_2, col='blue', lty = 'dashed')
 
-legend(x = "topleft", legend = c('E(Y)', 'order 4', 'order 2'), 
+legend(x = "topleft", legend = c('E(Y)', 'order 4 fit', 'order 2 fit'), 
        lty = c(1, 2, 2), col = c('red', 'orange', 'blue'), 
        lwd = 2, bg='transparent', box.col='transparent', cex=0.8)        
 
@@ -348,7 +364,7 @@ legend(x = "topleft", legend = c('E(Y)'),
        lwd = 2, bg='transparent', box.col='transparent', cex=0.8)
 ```
 
-
+We repeat the same procedure with a new sample of data where the true relationship doesn't depend as heavily to the term corresponding to the third order the variable x.
 
 ```{r 7_4_d}
 
@@ -364,7 +380,6 @@ fit_2 <- glm(y ~ x + x_2,
              family=gaussian, 
              data=data_2)
 
-
 # plot
 c0 <- coef(fit_4)[1]
 c1 <- coef(fit_4)[2]
@@ -378,13 +393,13 @@ c1 <- coef(fit_2)[2]
 c2 <- coef(fit_2)[3]
 y_fit_2 <- c0 + c1 * x.thick + c2 * x.thick^2
 
-## Plotting the result of the fits for sample B
+# Plotting the result of the fits for sample B
 plot(x, y, main='Fits for sample B', xlim=c(-4.5,4.5), ylim=c(-650, 200))
 lines(x.thick, y.fit, col='red', lty = 'solid')
 lines(x.thick, y_fit_4, col='orange', lty = 'dashed')
 lines(x.thick, y_fit_2, col='blue', lty = 'dashed')
 
-legend(x = "topleft", legend = c('E(Y)', 'order 4', 'order 2'), 
+legend(x = "topleft", legend = c('E(Y)', 'order 4 fit', 'order 2 fit'), 
        lty = c(1, 2, 2), col = c('red', 'orange', 'blue'), 
        lwd = 2, bg='transparent', box.col='transparent', cex=0.8)        
 
@@ -405,39 +420,47 @@ Fit a main-effects logistic model using weight and categorical color as explanat
 Fit the model that permits interaction between color as a factor and weight in their effects, showing the estimated effect of weight for each color. Test whether this model provides a significantly better fit.
 
 (c) 
-Use AIC to determine which models seem most sensible among the models with 
-(i) interaction, 
-(ii) main effects, 
-(iii) weight as the sole predictor, 
-(iv) color as the sole predictor, and 
-(v) the null model.
-
+Use AIC to determine which models seem most sensible among the models with (i) interaction, (ii) main effects, (iii) weight as the sole predictor, (iv) color as the sole predictor, and (v) the null model.
 
 **Solution**
 
-
+(a) 
+First, we download the data.
 ```{r 7_20_a}
+
 url <- "http://stat4ds.rwth-aachen.de/data/Crabs.dat"
 crabs <- read.table(url, header=TRUE)
-
 summary(crabs)
+
 ```
 
+Then, we fit a main-effects logistic model using weight and categorical color as explanatory variables.
+
 ```{r 7_20_b}
+
 # Fitting a main-effects logistic model using weight and categorical color as explanatory variables
 fit_main <- glm(y ~ weight + factor(color), 
                 family='binomial', 
                 data=crabs)
 
 summary(fit_main)
+
 ```
 
+Now we construct a $95\%$ confidence interval for the weight effect.
+
 ```{r 7_20_c}
+
 # 95% confidence interval for the weight effect
 mu <- coef(fit_main)['weight']
 z <- qnorm(0.95)
 serr <- summary(fit_main)$coefficients[2, 2]
 conf_int <- mu + c(-1,1) * serr * z
+conf_int
+
+```
+
+```{r 7_20_d}
 
 # Fitting the model that permits interaction between color as a factor and weight in their effects
 fit_inter <- glm(y ~ weight * factor(color), 
@@ -445,15 +468,19 @@ fit_inter <- glm(y ~ weight * factor(color),
                  data=crabs)
 
 summary(fit_inter)
+
 ```
 
-```{r 7_20_d}
-# Testing whether this model provides a significantly better fit with anova
+Here we test whether this model provides a significantly better fit
+
+```{r 7_20_e}
 anova(fit_main, fit_inter)
 ```
 
-```{r 7_20_e}
-# Here we use AIC to determine which models seem most sensible among the models with: interaction, main effects, weight as the sole predictor, color as the sole predictor, and the null model
+Then, we use AIC to determine which models seem most sensible among the models with: interaction, main effects, weight as the sole predictor, color as the sole predictor, and the null model.
+
+```{r 7_20_f}
+
 fit_weight <- glm(y ~ weight, 
                   family='binomial', 
                   data=crabs)
@@ -468,9 +495,12 @@ fit_null <- glm(y ~ 1,
 
 result <- AIC(fit_inter, fit_main, fit_weight, fit_color, fit_null)
 result
+
 ```
 
-```{r 7_20_f}
+Finally, we compare the results with a plot.
+
+```{r 7_20_g}
 plot(result$df, result$AIC, main='fits AIC', xlim=c(0.5, 9.5), ylim=c(190, 240))
 text(result$df, result$AIC+6, rownames(result))
 ```
@@ -483,35 +513,41 @@ Given the semantic that a lower AIC score is better, and a lower number of degre
 
 A headline in $The Gainesville Sun$ (Feb. 17, 2014) proclaimed a worrisome spike in shark attacks in the previous two years. The reported total number of shark attacks in Florida per year from 2001 to 2013 were 33, 29, 29, 12, 17, 21, 31, 28, 19, 14, 11, 26, 23. Are these counts consistent with a null Poisson model? Explain, and compare aspects of the Poisson model and negative binomial model fits.
 
-
 **Solution**
 
+First we manually load the data.
 
 ```{r 7_26_a}
-library(MASS)
-
 x <- 2001:2013
 y <- c(33, 29, 29, 12, 17, 21, 31, 28, 19, 14, 11, 26, 23)
 plot(x, y, main='Shark attacks', xlab='year', ylab='attacks')
 
+mu <- mean(y)
+sigma <- var(y)^(1/2)
+
+mu/sigma^2
 ```
 
+The fact that the average is significantly smaller than the variance suggests that our data is probably not generated by a Poisson process.
+
+Then, we fit the simple Poisson model.
+
 ```{r 7_26_b}
-# Fitting the Poisson model
 fit <- glm(y ~ x, family = poisson)
 summary(fit)
 ```
 
 The Poisson model shows a barely significant decline in the shark attacks over time.
+Now we fit the negative Poisson model.
 
 ```{r 7_26_c}
-# Fitting the negative Poisson model
 fit_nb <- glm.nb(y ~ x)
 summary(fit_nb)
 ```
 
+We compare the results with a plot
+
 ```{r 7_26_d}
-# Plot
 plot(x, y, main="Poisson vs Negative Binomial", xlab='year', ylab='attacks')
 lines(x, fitted(fit), col = "red")
 lines(x, fitted(fit_nb), col = "blue", lty = 'dashed')
@@ -525,8 +561,9 @@ The negative binomial model doesn't present any significant discrepancy from the
 
 
 
-
 ## DAAG - Chapter 8
+
+
 
 ### Ex 6
 
@@ -543,10 +580,6 @@ where b is normally distributed with mean 4 and standard deviation 5. [Use the a
 **Solution**
 
 ```{r}
-# Install and load necessary libraries
-# install.packages("MASS")
-library(MASS)
-
 # Function to simulate Poisson responses
 poissonsim <- function(n, x, intercept, slope, slope.sd = 0) {
   if (slope.sd == 0) {
