@@ -486,13 +486,43 @@ A headline in $The Gainesville Sun$ (Feb. 17, 2014) proclaimed a worrisome spike
 
 **Solution**
 
-...
 
-```{r 7_26}
+```{r 7_26_a}
+library(MASS)
+
+x <- 2001:2013
+y <- c(33, 29, 29, 12, 17, 21, 31, 28, 19, 14, 11, 26, 23)
+plot(x, y, main='Shark attacks', xlab='year', ylab='attacks')
 
 ```
 
-...
+```{r 7_26_b}
+# Fitting the Poisson model
+fit <- glm(y ~ x, family = poisson)
+summary(fit)
+```
+
+The Poisson model shows a barely significant decline in the shark attacks over time.
+
+```{r 7_26_c}
+# Fitting the negative Poisson model
+fit_nb <- glm.nb(y ~ x)
+summary(fit_nb)
+```
+
+```{r 7_26_d}
+# Plot
+plot(x, y, main="Poisson vs Negative Binomial", xlab='year', ylab='attacks')
+lines(x, fitted(fit), col = "red")
+lines(x, fitted(fit_nb), col = "blue", lty = 'dashed')
+
+legend(x = "bottomleft", legend = c('Poisson', 'Negative Binomial'), 
+       lty = c(1, 2), col = c('red', 'blue'), 
+       lwd = 2, bg='transparent', box.col='transparent', cex=0.8)  
+```
+
+The negative binomial model doesn't present any significant discrepancy from the Poisson model.
+
 
 
 
